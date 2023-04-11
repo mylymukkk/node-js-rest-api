@@ -10,20 +10,31 @@ const {
   updateStatus,
 } = require("../../controllers/contacts");
 
+const validateBody = require("../../middlewares/validation");
+const authenticate = require("../../middlewares/authenticate");
+
 const {
   newContactSchema,
   updatedContactSchema,
   contactStatusSchema,
-} = require("../../middlewares/validation");
+} = require("../../service/schemas/contact");
 
-router.route("/").get(get).post(newContactSchema, create);
+router
+  .route("/")
+  .get(authenticate, get)
+  .post(authenticate, validateBody(newContactSchema), create);
 
 router
   .route("/:contactId")
-  .get(getById)
-  .delete(remove)
-  .put(updatedContactSchema, update);
+  .get(authenticate, getById)
+  .delete(authenticate, remove)
+  .put(authenticate, validateBody(updatedContactSchema), update);
 
-router.patch("/:contactId/favorite", contactStatusSchema, updateStatus);
+router.patch(
+  "/:contactId/favorite",
+  authenticate,
+  validateBody(contactStatusSchema),
+  updateStatus
+);
 
 module.exports = router;

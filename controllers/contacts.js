@@ -7,12 +7,11 @@ const {
   updateContactStatus,
 } = require("../service/contacts");
 
-const catchAsync = (fn) => (req, res, next) => {
-  fn(req, res, next).catch((err) => next(err));
-};
+const catchAsync = require("../helpers/catchAsync");
 
 const get = catchAsync(async (req, res, next) => {
-  const contacts = await listContacts();
+  const { _id: owner } = req.user;
+  const contacts = await listContacts({ owner });
   res.status(200).json(contacts);
 });
 
@@ -25,7 +24,8 @@ const getById = catchAsync(async (req, res, next) => {
 });
 
 const create = catchAsync(async (req, res, next) => {
-  const newContact = await addContact(req.body);
+  const { _id: owner } = req.user;
+  const newContact = await addContact({ ...req.body, owner });
   res.status(201).json(newContact);
 });
 

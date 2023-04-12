@@ -10,8 +10,7 @@ const {
   updateStatus,
 } = require("../../controllers/contacts");
 
-const validateBody = require("../../middlewares/validation");
-const authenticate = require("../../middlewares/authenticate");
+const { validateBody, authenticate } = require("../../middlewares");
 
 const {
   newContactSchema,

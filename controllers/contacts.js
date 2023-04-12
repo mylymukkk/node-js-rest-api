@@ -7,7 +7,7 @@ const {
   updateContactStatus,
 } = require("../service/contacts");
 
-const catchAsync = require("../helpers/catchAsync");
+const { catchAsync } = require("../helpers");
 
 const get = catchAsync(async (req, res, next) => {
   const { _id: owner } = req.user;

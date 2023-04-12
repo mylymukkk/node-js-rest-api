@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 
-const handleMongooseError = require("../../helpers/handleMongooseError");
+const { handleMongooseError } = require("../../helpers");
 
 const user = Schema(
   {
@@ -21,10 +21,17 @@ const user = Schema(
     },
     token: String,
     avatarURL: String,
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
+      default: "",
+    },
   },
-  {
-    versionKey: false,
-  }
+  { versionKey: false }
 );
 
 user.post("save", handleMongooseError);
@@ -34,9 +41,14 @@ const userSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
+const emailSchema = Joi.object({
+  email: Joi.string().email().required(),
+});
+
 const User = model("users", user);
 
 module.exports = {
   User,
   userSchema,
+  emailSchema,
 };

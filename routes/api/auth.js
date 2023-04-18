@@ -7,14 +7,16 @@ const {
   getCurrent,
   logout,
   updateAvatar,
+  verifyEmail,
+  resendVerifyEmail,
 } = require("../../controllers/auth");
 
-const { userSchema } = require("../../service/schemas/user");
-const validateBody = require("../../middlewares/validation");
-const authenticate = require("../../middlewares/authenticate");
-const upload = require("../../middlewares/upload");
+const { userSchema, emailSchema } = require("../../service/schemas/user");
+const { validateBody, authenticate, upload } = require("../../middlewares");
 
 router.post("/register", validateBody(userSchema), register);
+router.get("/verify/:verificationToken", verifyEmail);
+router.post("/verify", validateBody(emailSchema), resendVerifyEmail);
 router.post("/login", validateBody(userSchema), login);
 router.get("/current", authenticate, getCurrent);
 router.post("/logout", authenticate, logout);
